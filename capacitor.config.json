@@ -1,0 +1,8 @@
+{
+  "appId": "com.monapp",
+  "appName": "MonApp",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https"
+  }
+}
