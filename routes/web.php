@@ -14,12 +14,10 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('guest')->group(function () {
-    Route::get('/', function () {
-        return redirect('/login');
-    });
-});
 
+Route::get('/', function () {
+    return Inertia::render('Auth/Login');
+})->middleware('guest')->name('login.page');
 
 
 Route::middleware('auth')->group(function () {
