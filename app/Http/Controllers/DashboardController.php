@@ -31,7 +31,7 @@ class DashboardController extends Controller
             // Extraction des événements de la réponse
             $events = $eventsResponse['results'] ?? [];
             
-            return Inertia::render('Dashboard', [
+            return Inertia::render('Home', [
                 'events' => $events,
                 'apiResponse' => $eventsResponse, // Pour le debugging si nécessaire
             ]);
@@ -41,7 +41,7 @@ class DashboardController extends Controller
                 'user_id' => auth()->id()
             ]);
             
-            return Inertia::render('Dashboard', [
+            return Inertia::render('Home', [
                 'events' => [],
                 'apiResponse' => ['error' => 'Impossible de récupérer les événements: ' . $e->getMessage()]
             ]);
