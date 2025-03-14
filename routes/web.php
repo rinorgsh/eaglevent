@@ -15,6 +15,7 @@ use Inertia\Inertia;
 */
 
 
+
 Route::get('/', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
