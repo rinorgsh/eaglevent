@@ -241,5 +241,49 @@ public function performCheckin($eventSlug, $listId, array $checkinData)
 {
     return $this->request('post', 'organizers/' . $this->organizer . '/events/' . $eventSlug . '/checkinlists/' . $listId . '/checkins/', $checkinData);
 }
+public function downloadTicketPdf($eventSlug, $orderCode, $positionId = null)
+{
+    try {
+        $downloadUrl = 'organizers/' . $this->organizer . 
+                       '/events/' . $eventSlug . 
+                       ($positionId ? '/orderpositions/' . $positionId : '/orders/' . $orderCode) . 
+                       '/download/pdf/';
 
+        // Log détaillé
+        Log::error('PDF Download Debug', [
+            'full_url' => $this->apiUrl . $downloadUrl,
+            'method' => 'get',
+            'headers' => [
+                'Authorization' => 'Token ' . substr($this->apiKey, 0, 5) . '...',
+                'Accept' => 'application/pdf'
+            ]
+        ]);
+
+        // Essayez plusieurs configurations de headers
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . $this->apiKey,
+            'Accept' => '*/*'  // Accept all content types
+        ])->get($this->apiUrl . $downloadUrl);
+
+        // Vérifier si la requête a réussi
+        if ($response->successful()) {
+            return $response->body();
+        } else {
+            Log::error('Erreur de téléchargement du PDF', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+                'headers' => $response->headers()
+            ]);
+            
+            throw new \Exception('Impossible de télécharger le PDF : ' . json_encode($response->json()));
+        }
+    } catch (\Exception $e) {
+        Log::error('Erreur lors du téléchargement du PDF', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        throw $e;
+    }
+}
 }

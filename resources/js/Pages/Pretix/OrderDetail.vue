@@ -224,16 +224,18 @@ function getTicketDownloadUrl(position) {
                 
                 <!-- Bouton de téléchargement pour tous les tickets -->
                 <a 
-                    v-if="order && order.download_url" 
-                    :href="order.download_url" 
-                    target="_blank" 
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-lg"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Télécharger tous les tickets
-                </a>
+        v-if="order && order.download_url" 
+        :href="route('pretix.download.ticket', { 
+            eventSlug: eventSlug, 
+            orderCode: order.code 
+        })" 
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-lg"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Télécharger tous les tickets
+    </a>
             </div>
 
             <!-- Message en cas d'erreur API -->
@@ -328,12 +330,17 @@ function getTicketDownloadUrl(position) {
                                     <!-- Boutons d'action -->
                                     <div class="flex space-x-2">
                                         <!-- Télécharger PDF -->
-                                        <a v-if="position.pdf_ticket" 
-                                           :href="position.pdf_ticket" 
-                                           target="_blank"
-                                           class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-md">
-                                            PDF
-                                        </a>
+                                        <a 
+                                        v-if="position.pdf_ticket" 
+                                        :href="route('pretix.download.ticket', { 
+                                            eventSlug: eventSlug, 
+                                            orderCode: order.code, 
+                                            positionId: position.id || position.positionid 
+                                        })"
+                                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 border border-transparent rounded-md"
+                                    >
+                                        PDF
+                                    </a>
                                         
                                         <!-- Lien vers la page du billet -->
                                         <a v-if="position.ticket_page_url" 

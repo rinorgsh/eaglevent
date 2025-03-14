@@ -742,4 +742,31 @@ public function performCheckin(Request $request, $eventSlug, $listId)
         ], 500);
     }
 }
+public function downloadTicket($eventSlug, $orderCode, $positionId = null)
+{
+    try {
+        // Récupérer le contenu PDF
+        $pdfContent = $this->pretixService->downloadTicketPdf($eventSlug, $orderCode, $positionId);
+        
+        // Générer un nom de fichier
+        $filename = "ticket-{$eventSlug}-{$orderCode}" . 
+                    ($positionId ? "-{$positionId}" : "") . 
+                    ".pdf";
+        
+        // Retourner la réponse avec le PDF
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$filename}\""
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Erreur de téléchargement du ticket', [
+            'error' => $e->getMessage()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Impossible de télécharger le ticket: ' . $e->getMessage()
+        ], 500);
+    }
+}
 }

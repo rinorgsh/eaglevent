@@ -31,7 +31,9 @@ Route::middleware('auth')->group(function () {
     // Création d'événement - Ces routes doivent être placées AVANT les routes avec paramètres
     Route::get('/pretix/events/create', [PretixController::class, 'create'])->name('pretix.events.create');
     Route::post('/pretix/events', [PretixController::class, 'store'])->name('pretix.events.store');
-    
+    Route::get('/pretix/{eventSlug}/download-ticket/{orderCode}/{positionId?}', 
+    [PretixController::class, 'downloadTicket'])
+    ->name('pretix.download.ticket');
     // Détails d'un événement
     Route::get('/pretix/events/{eventSlug}', [PretixController::class, 'show'])->name('pretix.show');
     
